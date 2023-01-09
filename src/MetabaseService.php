@@ -44,10 +44,11 @@ class MetabaseService
     /**
      * @param int|null $dashboard
      * @param int|null $question
+     * @param int|null $exp
      *
      * @return string
      */
-    public function generateEmbedUrl(?int $dashboard, ?int $question): string
+    public function generateEmbedUrl(?int $dashboard, ?int $question, ?int $exp): string
     {
         $config = Configuration::forSymmetricSigner(
             new Sha256(),
@@ -71,6 +72,10 @@ class MetabaseService
             $params = (object) $params;
         }
         $builder->withClaim('params', $params);
+
+        if ($exp) {
+            $builder->expiresAt(time() + ($exp * 60));
+        }
 
         $token = $builder
             ->getToken($config->signer(), $config->signingKey())
