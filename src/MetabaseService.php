@@ -74,7 +74,7 @@ class MetabaseService
         $builder->withClaim('params', $params);
 
         if ($exp) {
-            $builder->expiresAt(time() + ($exp * 60));
+            $builder->expiresAt((new \DateTimeImmutable())->modify("+{$exp} minutes"));
         }
 
         $token = $builder
